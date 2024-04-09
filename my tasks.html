@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>To-Do List</title>
+  <style>
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+    th, td {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+      max-width: 200px; /* Limiting the width of the cell */
+      word-wrap: break-word; /* Allowing text wrapping */
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+    .completed {
+      background-color: lightgreen; /* Change background color to green */
+    }
+  </style>
+</head>
+<body>
+
+<h2>To-Do List for April 2024</h2>
+
+<table>
+  <tr>
+    <th>Date</th>
+    <th>Tasks</th>
+    
+  </tr>
+  <!-- Loop through dates from April 11th to April 30th -->
+  <!-- Each date has 9 tasks -->
+  <!-- Using JavaScript to generate the table dynamically -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // Start from April 11th
+      var currentDate = new Date('2024-04-11');
+      var endDate = new Date('2024-04-30');
+
+      // Task names
+      var tasks = [
+        "7 hour sleep",
+        "Exercise",
+        "Skin care",
+        "Walking (30 min outside of home)",
+        "2 liter water intake",
+        "Skill learning",
+        "Healthy diet intake",
+        "Entertainment/Study",
+        "Dukan"
+      ];
+
+      // Loop through dates
+      while (currentDate <= endDate) {
+        var row = document.createElement('tr');
+        var dateCell = document.createElement('td');
+        dateCell.textContent = currentDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        row.appendChild(dateCell);
+
+        // Add tasks for the current date
+        for (var i = 0; i < 9; i++) {
+          var taskCell = document.createElement('td');
+          taskCell.textContent = tasks[i];
+          var checkbox = document.createElement('input');
+          checkbox.type = 'checkbox';
+          checkbox.name = 'task_' + currentDate.getDate() + '_' + (i + 1);
+          checkbox.onclick = limitCheckbox;
+          // Check if task was completed previously
+          if (localStorage.getItem(checkbox.name) === 'completed') {
+            checkbox.checked = true;
+            taskCell.classList.add('completed');
+          }
+          taskCell.appendChild(checkbox);
+          row.appendChild(taskCell);
+        }
+
+        document.querySelector('table').appendChild(row);
+
+        // Move to the next day
+        currentDate.setDate(currentDate.getDate() + 1);
+      }
+    });
+
+    function limitCheckbox(event) {
+      var checkbox = event.target;
+      var taskCell = checkbox.parentElement;
+      var row = taskCell.parentElement;
+
+      if (checkbox.checked) {
+        taskCell.classList.add('completed');
+        localStorage.setItem(checkbox.name, 'completed'); // Store task state in local storage
+      } else {
+        taskCell.classList.remove('completed');
+        localStorage.removeItem(checkbox.name); // Remove task state from local storage
+      }
+    }
+  </script>
+</table>
+
+</body>
+</html>
